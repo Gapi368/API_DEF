@@ -13,7 +13,6 @@ export class CmateriasService {
   ) { }
 
 async create(dto: CreateCmateriaDto, userId: number): Promise<Cmateria> {
-  console.log('Creando materia para userId:', userId, 'dto:', dto);
   const materia = this.materiasRepo.create({
     nombre_materia: dto.nombre_materia,
     maestro: dto.maestro,
