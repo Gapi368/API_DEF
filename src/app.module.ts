@@ -51,5 +51,8 @@ import { CmateriasModule } from './cmaterias/cmaterias.module';
     FTareasModule,
     DColoresModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
+  
 })
 export class AppModule { }
