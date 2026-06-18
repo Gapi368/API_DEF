@@ -15,6 +15,13 @@ export class UpdateFTareaDto  {
   @Max(3)
   dificultad?: number;
 
+  @ApiPropertyOptional({ example: 2, minimum: 1, maximum: 3 })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(3)
+  prioridad?: number;
+
   @ApiPropertyOptional({ example: '2025-12-20' })
   @IsOptional()
   @IsDateString()
@@ -28,4 +35,3 @@ export class UpdateFTareaDto  {
   @IsBoolean()
   finalizada?: boolean;
 }
-
