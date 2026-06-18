@@ -33,4 +33,7 @@ export class FTarea {
     @ManyToOne(() => Cmateria, (materia) => materia.tareas)
     @JoinColumn({ name: 'tarea_materia' })
     materia!: Cmateria;
+
+    @Column() 
+    prioridad!: number;
 }
