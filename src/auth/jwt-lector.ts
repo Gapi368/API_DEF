@@ -7,7 +7,12 @@ import { PassportStrategy } from "@nestjs/passport";
 @Injectable()
 export class JwtLector extends PassportStrategy(Strategy) {
   constructor(config: ConfigService) {
-    const secret = config.get<string>('JWT_SECRET') ?? 'fallback_secret_change_me';
+    const secret = config.get<string>('JWT_SECRET');
+    if (!secret) {
+      throw new Error(
+        'JWT_SECRET no está configurado.',
+      );
+    }
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
