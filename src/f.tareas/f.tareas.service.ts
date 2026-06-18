@@ -38,10 +38,12 @@ export class FTareasService {
     const tarea = this.tareasRepo.create({
       nombre_tarea: dto.nombre_tarea,
       dificultad: dto.dificultad,
+      prioridad: dto.prioridad,
       puntos_estres: puntos,
       tarea_materia: dto.tarea_materia,
       fecha: dto.fecha,
       finalizada: false,
+      fecha_completada: null,
     });
     const saved = await this.tareasRepo.save(tarea);
 
@@ -75,18 +77,30 @@ export class FTareasService {
   async update(id: number, dto: UpdateFTareaDto, userId: number): Promise<FTarea> {
     const tarea = await this.findOne(id, userId);
     const yaFinalizada = tarea.finalizada;
-    //Guarda los puntos ANTES de que Object.assign pueda sobreescribirlos
+    //Puntos antes de aplicar cualquier cambio (se usan para revertir el estrés si corresponde)
     const puntosOriginales = tarea.puntos_estres;
 
-    Object.assign(tarea, dto);
-    const saved = await this.tareasRepo.save(tarea);
+    //Si cambia dificultad y/o prioridad, se recalculan los puntos de estrés de la tarea
+    const nuevaDificultad = dto.dificultad ?? tarea.dificultad;
+    const nuevaPrioridad = dto.prioridad ?? tarea.prioridad;
+    const puntosRecalculados = this.calcularPuntosEstres(nuevaDificultad, nuevaPrioridad);
 
-    //Si se marcó como finalizada ahora, entmces se restan puntos de estrés originales
+    Object.assign(tarea, dto);
+    tarea.puntos_estres = puntosRecalculados;
+
+    //Si se marcó como finalizada ahora, se restan los puntos de estrés (ya recalculados) y se guarda la fecha
     if (!yaFinalizada && dto.finalizada === true) {
-      await this.actualizarEstres(userId, -puntosOriginales);
+      tarea.fecha_completada = new Date().toISOString().split('T')[0];
+      await this.actualizarEstres(userId, -puntosRecalculados);
     }
 
-    return saved;
+    //Si se reabre una tarea ya finalizada, se le devuelven los puntos que se habían restado
+    if (yaFinalizada && dto.finalizada === false) {
+      tarea.fecha_completada = null;
+      await this.actualizarEstres(userId, puntosOriginales);
+    }
+
+    return this.tareasRepo.save(tarea);
   }
 
   async remove(id: number, userId: number): Promise<{ message: string }> {
@@ -108,6 +122,7 @@ export class FTareasService {
     }
     const puntos = tarea.puntos_estres;
     tarea.finalizada = true;
+    tarea.fecha_completada = new Date().toISOString().split('T')[0];
     await this.tareasRepo.save(tarea);
     await this.actualizarEstres(userId, -puntos);
     return {
@@ -124,4 +139,3 @@ export class FTareasService {
     }
   }
 }
-
