@@ -15,10 +15,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   imports: [PassportModule, TypeOrmModule.forFeature([BUser, EPerfil, GHobby, DColor]), JwtModule.registerAsync({
     imports: [ConfigModule],
     inject: [ConfigService],
-    useFactory: async (config: ConfigService) => ({
-      secret: config.get<string>('JWT_SECRET') ?? 'fallback_secret_change_me',
-      signOptions: { expiresIn: '7d' as const },
-    }),
+    useFactory: (config: ConfigService) => {
+      const secret = config.get<string>('JWT_SECRET');
+      if (!secret) {
+        throw new Error(
+          'JWT_SECRET no está configurado.',
+        );
+      }
+      return {
+        secret,
+        signOptions: { expiresIn: '7d' as const },
+      };
+    },
   }),
 ],
   controllers: [AuthController],
