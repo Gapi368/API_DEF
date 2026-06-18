@@ -60,7 +60,7 @@ export class DashboardService {
       .innerJoin('t.materia', 'm')
       .where('m.materia_usuario = :userId', { userId })
       .andWhere('t.finalizada = true')
-      .andWhere('t.fecha = :hoy', { hoy })
+      .andWhere('t.fecha_completada = :hoy', { hoy })
       .getCount();
 
     //Total de tareas del usuario
@@ -152,7 +152,7 @@ export class DashboardService {
       .innerJoin('t.materia', 'm')
       .where('m.materia_usuario = :userId', { userId })
       .andWhere('t.finalizada = true')
-      .andWhere('t.fecha = :hoy', { hoy })
+      .andWhere('t.fecha_completada = :hoy', { hoy })
       .getMany();
 
     const puntosGanados = tareasHechasHoy.reduce((s, t) => s + t.puntos_estres, 0);
