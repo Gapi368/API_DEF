@@ -12,6 +12,8 @@ export class CmateriasService {
     private materiasRepo: Repository<Cmateria>,
   ) { }
 
+//hola como están
+
 async create(dto: CreateCmateriaDto, userId: number): Promise<Cmateria> {
   const materia = this.materiasRepo.create({
     nombre_materia: dto.nombre_materia,
