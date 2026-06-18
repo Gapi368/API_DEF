@@ -17,7 +17,6 @@ export class CmateriasController {
   @ApiOperation({ summary: 'Registrar materia', description: 'Agrega una materia al usuario. Asigna un color para identificarla en el dashboard.' })
   @ApiResponse({ status: 201, description: 'Materia registrada' })
   @ApiResponse({ status: 401, description: 'No autenticado' })
-@Post()
 create(@Body() dto: CreateCmateriaDto, @Request() req) {
   console.log('Usuario del token:', req.user);
   return this.materiasService.create(dto, req.user.id_usuario);
