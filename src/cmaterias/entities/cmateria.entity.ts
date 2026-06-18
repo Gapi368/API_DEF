@@ -7,27 +7,27 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 @Entity('Materias')
 export class Cmateria {
     @PrimaryGeneratedColumn()
-    id_materia: number = 0;
+    id_materia!: number;
 
     @Column({ length: 45 })
-    nombre_materia: string = '';
+    nombre_materia!: string;
 
     @Column({ length: 45 })
-    maestro: string = '';
+    maestro!: string;
 
     @Column()
-    materia_usuario: number = 0;
+    materia_usuario!: number;
 
     @Column()
-    materia_color: number = 0;
+    materia_color!: number;
 
     @ManyToOne(() => BUser, (user) => user.materias)
     @JoinColumn({ name: 'materia_usuario' })
-    usuario: BUser = new BUser();
+    usuario!: BUser;
 
     @ManyToOne(() => DColor, (color) => color.materias)
     @JoinColumn({ name: 'materia_color' })
-    color: DColor = new DColor();
+    color!: DColor;
 
     @OneToMany(() => FTarea, (tarea) => tarea.materia)
     tareas!: FTarea[];
