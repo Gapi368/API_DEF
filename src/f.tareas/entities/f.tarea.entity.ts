@@ -9,31 +9,34 @@ import {
 
 @Entity('Tareas')
 export class FTarea {
-    @PrimaryGeneratedColumn()
-    id_tarea?: number;
+   @PrimaryGeneratedColumn()
+    id_tarea!: number;
 
     @Column()
-    dificultad?: number;
+    dificultad!: number;
+
+    @Column()
+    prioridad!: number;
 
     @Column({ default: 0 })
-    puntos_estres: number = 0;
+    puntos_estres!: number;
+
+    @Column({ type: 'date', nullable: true })
+    fecha_completada!: string | null;
 
     @Column({ length: 45 })
-    nombre_tarea?: string;
+    nombre_tarea!: string;
 
     @Column()
-    tarea_materia?: number;
+    tarea_materia!: number;
 
     @Column({ type: 'date' })
-    fecha?: string;
+    fecha!: string;
 
     @Column({ type: 'boolean', default: false })
-    finalizada?: boolean;
+    finalizada!: boolean;
 
     @ManyToOne(() => Cmateria, (materia) => materia.tareas)
     @JoinColumn({ name: 'tarea_materia' })
     materia!: Cmateria;
-
-    @Column() 
-    prioridad!: number;
 }
